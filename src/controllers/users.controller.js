@@ -24,8 +24,33 @@ async function registerUser(req, res) {
     }
 }
 
+
+async function login(req, res) {
+    try {
+        const { username, password } = req.body;
+        const success = await service.loginService(username, password);
+
+        if (!success) {
+            return res.status(401).json({
+                message: "Login failed."
+            })
+        }
+
+        res.status(200).json({
+            message: "The user has successfully logged in."
+        })
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
+    }
+
 export default {
-    registerUser
-}
+        registerUser,
+        login
+    }
 
 

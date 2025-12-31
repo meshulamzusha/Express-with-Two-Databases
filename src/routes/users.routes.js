@@ -9,4 +9,10 @@ router.post('/register',
     controller.registerUser
 )
 
+
+router.post('/login', 
+    middleware.validateUserFields, 
+    controller.login
+)
+
 export default router;
