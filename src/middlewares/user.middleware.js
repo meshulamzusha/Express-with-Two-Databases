@@ -1,3 +1,6 @@
+import service from '../services/users.service.js'
+
+
 function validateUserFields(req, res, next) {
     const { username, password } = req.body;
 
@@ -23,6 +26,35 @@ function validateUserFields(req, res, next) {
 }
 
 
+async function authenticateUser(req, res, next) {
+    try {
+        const { username, password } = req.body;
+        const user = await service.getUserByUsername(username);
+
+        if (!user) {
+            return res.status(404).json({
+                message: `user with ${username} not exist`
+            })
+        }
+        
+        if (user.password != password) {
+            return res.status(401).json({
+                message: "Username exists but password is incorrect."
+            })
+        }
+
+        next()
+
+    } catch (error) {
+        return res.status(500).json({
+            error: error.message,
+            message: "Internal server Error"
+        })
+    }
+}
+
+
 export default {
-    validateUserFields
+    validateUserFields,
+    authenticateUser
 }
